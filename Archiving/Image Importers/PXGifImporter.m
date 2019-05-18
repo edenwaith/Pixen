@@ -11,9 +11,20 @@
 
 + (BOOL)fileAtURLIsAnimated:(NSURL *)url
 {
-	NSImage *tempImage = [[NSImage alloc] initWithContentsOfURL:url];
-	int frameCount = [[[[tempImage representations] objectAtIndex:0] valueForProperty:NSImageFrameCount] intValue];
-	return (frameCount > 1);
+	NSImage *tempImage   = [[NSImage alloc] initWithContentsOfURL:url];
+	NSImageRep *imageRep = [[tempImage representations] firstObject];
+	
+	if ((imageRep != NULL) && ([imageRep isKindOfClass:[NSBitmapImageRep class]] == YES))
+	{	
+		NSBitmapImageRep *bitmapImageRep = (NSBitmapImageRep *)imageRep;
+		int frameCount = [[bitmapImageRep valueForProperty:NSImageFrameCount] intValue];
+	
+		return (frameCount > 1);
+	}
+	else
+	{
+		return NO;
+	}
 }
 
 @end
